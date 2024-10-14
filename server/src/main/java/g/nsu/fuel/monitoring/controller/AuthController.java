@@ -1,7 +1,7 @@
 package g.nsu.fuel.monitoring.controller;
 
-import g.nsu.fuel.monitoring.services.AuthService;
 import g.nsu.fuel.monitoring.services.TokensService;
+import g.nsu.fuel.monitoring.services.interfaces.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -4,9 +4,8 @@ import lombok.ToString;
 
 @ToString
 public enum RoleEnum {
-    STUDENT,
-    FORMAL_TEACHER,
-    ACTUAL_TEACHER,
-    CONSULTANT,
+    USER,
+    MANAGER,
+    FUEL_STATION,
     ADMIN;
 }
