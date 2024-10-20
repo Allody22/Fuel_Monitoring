@@ -1,8 +1,10 @@
 package g.nsu.fuel.monitoring.services.interfaces;
 
 import g.nsu.fuel.monitoring.payload.response.AccountInfoResponse;
-import g.nsu.fuel.monitoring.payload.response.JwtResponse;
+import g.nsu.fuel.monitoring.payload.response.RefreshResponse;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.security.auth.login.CredentialException;
 
 /**
  * Интерфейс AuthService предоставляет методы для аутентификации пользователей, регистрации и получения информации об аккаунте.
@@ -15,18 +17,18 @@ public interface AuthService {
      *
      * @param username телефон пользователя
      * @param password пароль пользователя
-     * @return объект JwtResponse, содержащий JWT, созданный по данным пользователя.
+     * @return объект response, содержащий JWT и Refresh токен, созданный по данным пользователя.
      */
-    JwtResponse login(String username, String password);
+    RefreshResponse login(String username, String password, String fingerPrint) throws CredentialException;
 
     /**
      * Регистрация нового пользователя в системе.
      *
      * @param username телефон пользователя
      * @param password пароль пользователя
-     * @return объект JwtResponse, содержащий JWT, созданный по данным пользователя.
+     * @return объект response, содержащий JWT и Refresh токен, созданный по данным пользователя.
      */
-    JwtResponse register(String username, String password);
+    RefreshResponse register(String username, String password, String fingerprint);
 
     /**
      * Получение информации о текущем пользователе на основе его токена.

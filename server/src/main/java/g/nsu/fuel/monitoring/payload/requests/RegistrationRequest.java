@@ -16,4 +16,7 @@ public class RegistrationRequest {
 
     @Schema(description = "Пароль данного пользователя", example = "very_strong_password")
     private String password;
+
+    @Schema(description = "Фингерпринт пользователя.", example = "hello world i made it", required = true)
+    private String fingerprint;
 }
