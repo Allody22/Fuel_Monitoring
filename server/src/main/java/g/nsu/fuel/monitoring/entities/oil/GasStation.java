@@ -3,6 +3,8 @@ package g.nsu.fuel.monitoring.entities.oil;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -21,10 +23,16 @@ public class GasStation {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "site")
-    private String site;
+    @Column(name = "url")
+    private String url;
 
-    @Column(name = "address")
-    private String address;
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "email")
+    private String email;
+
+    @OneToMany(mappedBy = "gasStation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<GasStationByAddress> addresses;
 
 }

@@ -1,6 +1,9 @@
 package g.nsu.fuel.monitoring.entities.oil;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,18 +12,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "type")
+@Table(name = "oil_types")
 @AllArgsConstructor
 @NoArgsConstructor
 public class OilTypes {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     private String oilType;
+
 
 }
