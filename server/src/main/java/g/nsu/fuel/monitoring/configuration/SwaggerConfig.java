@@ -16,7 +16,7 @@ public class SwaggerConfig {
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("public")
-                .packagesToScan("nsu.diploma.controller")
+                .packagesToScan("g.nsu.fuel.monitoring")
                 .build();
     }
 
@@ -32,7 +32,7 @@ public class SwaggerConfig {
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
                 ))
-                .info(new Info().title("Wild Stat Api API").version("v1"));
+                .info(new Info().title("Fuel monitoring API").version("v1"));
     }
 
 }

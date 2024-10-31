@@ -24,6 +24,9 @@ public class GasStationByAddress {
     @Column(name = "rating")
     private Double rating;
 
+    @Column(name = "address")
+    private String address;
+
     @Column(name = "feedbacks")
     private Integer feedbacks;
 
@@ -33,7 +36,6 @@ public class GasStationByAddress {
     @ManyToOne
     @JoinColumn(name = "gas_station_id", nullable = false)
     private GasStation gasStation;
-
 
     @OneToMany(mappedBy = "gasStationByAddress", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<GasStationSalesHistory> salesHistories;

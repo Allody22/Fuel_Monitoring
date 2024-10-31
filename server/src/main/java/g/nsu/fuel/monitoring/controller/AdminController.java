@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@Tag(name = "00. Auth Controller", description = "API для администратора..")
+@Tag(name = "01. Admin Controller", description = "API для администратора..")
 @RequestMapping("/api/v1/admin")
 public class AdminController {
 
