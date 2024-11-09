@@ -11,7 +11,6 @@ import g.nsu.fuel.monitoring.repository.GasStationByAddressRepository;
 import g.nsu.fuel.monitoring.services.interfaces.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.security.auth.login.CredentialException;
@@ -58,9 +57,9 @@ public class UserServiceImpl implements UserService {
         Account account = accountRepository.findByPhoneNumber(userName)
                 .orElseThrow(() -> new CredentialException("Invalid credentials"));
 
-        GasStationByAddress gasStationByAddress = gasStationByAddressRepository.findById(favoriteId)
-                .orElseThrow(() -> new NotInDataBaseException("Заправка с айди " + favoriteId));
-
+        if (!gasStationByAddressRepository.existsById(favoriteId)){
+            throw new NotInDataBaseException("Заправка с айди " + favoriteId);
+        }
         Favorites favorites = favoriteRepository.findById(favoriteId)
                 .orElseThrow(() -> new NotInDataBaseException("Заправка с айди " + favoriteId));
 
