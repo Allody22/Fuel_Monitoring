@@ -1,6 +1,5 @@
 package g.nsu.fuel.monitoring.services.interfaces;
 
-import g.nsu.fuel.monitoring.payload.requests.AddGasStationAddressRequest;
 import g.nsu.fuel.monitoring.payload.requests.AddGasStationRequest;
 import g.nsu.fuel.monitoring.payload.response.GasStationResponse;
 

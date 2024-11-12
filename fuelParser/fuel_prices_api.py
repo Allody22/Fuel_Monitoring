@@ -8,13 +8,14 @@ from utils import add_or_get_station_id, add_fuel_info
 
 app = Flask(__name__)
 
+import os
+
 DB_SETTINGS = {
     'dbname': 'fuel_monitoring',
     'user': 'postgres',
-    'password': '0000',
+    'password': os.getenv('PG_PASSWORD', ''),
     'host': 'localhost'
 }
-
 
 @app.route('/api/add_gas_station', methods=['POST'])
 def add_gas_station():
@@ -59,6 +60,7 @@ def fetch_prices(network):
         fuel_prices = fetch_function()
         return jsonify(fuel_prices), 200
     except Exception as e:
+        app.logger.error("Error updating prices:", exc_info=True)
         return jsonify({'error': str(e)}), 500
 
 

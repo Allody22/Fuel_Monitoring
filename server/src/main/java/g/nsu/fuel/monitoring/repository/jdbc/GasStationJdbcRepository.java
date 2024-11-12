@@ -1,8 +1,5 @@
 package g.nsu.fuel.monitoring.repository.jdbc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import g.nsu.fuel.monitoring.payload.response.GasStationByAddressResponse;
 import g.nsu.fuel.monitoring.payload.response.GasStationResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +8,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,6 +34,7 @@ public class GasStationJdbcRepository {
                     gs.email AS gas_station_email,
                     JSON_AGG(
                         JSON_BUILD_OBJECT(
+                            'id', gsa.id,
                             'rating', gsa.rating,
                             'address', gsa.address,
                             'feedbacks', gsa.feedbacks,
@@ -55,20 +55,51 @@ public class GasStationJdbcRepository {
             gasStationResponse.setEmail(rs.getString("gas_station_email"));
             gasStationResponse.setType(rs.getString("gas_station_type"));
 
-            ObjectMapper objectMapper = new ObjectMapper();
+            List<GasStationByAddressResponse> addresses = new ArrayList<>();
+
+            // Извлекаем JSON строку и обрабатываем вручную
             String addressesJson = rs.getString("addresses");
-            List<GasStationByAddressResponse> addresses = null;
-            try {
-                addresses = objectMapper.readValue(
-                        addressesJson, new TypeReference<>() {
+            if (addressesJson != null && !addressesJson.isEmpty()) {
+                // Разбиваем JSON массив объектов вручную
+                String[] addressEntries = addressesJson.replace("[", "").replace("]", "").split("},\\s*\\{");
+
+                for (String addressEntry : addressEntries) {
+                    GasStationByAddressResponse addressResponse = new GasStationByAddressResponse();
+
+                    // Удаляем лишние символы и разделяем поля
+                    addressEntry = addressEntry.replace("{", "").replace("}", "").replace("\"", "");
+                    String[] fields = addressEntry.split(",");
+
+                    for (String field : fields) {
+                        String[] keyValue = field.split(":");
+                        if (keyValue.length == 2) {
+                            String key = keyValue[0].trim();
+                            String value = keyValue[1].trim();
+
+                            switch (key) {
+                                case "rating":
+                                    addressResponse.setRating(value.isEmpty() ? null : Double.parseDouble(value));
+                                    break;
+                                case "address":
+                                    addressResponse.setAddress(value.isEmpty() ? null : value);
+                                    break;
+                                case "feedbacks":
+                                    addressResponse.setFeedbacks(value.isEmpty() ? null : Integer.parseInt(value));
+                                    break;
+                                case "updatedAt":
+                                    addressResponse.setUpdatedAt(value.isEmpty() ? null : LocalDate.parse(value));
+                                    break;
+                                case "id":
+                                    addressResponse.setId(value.isEmpty() ? null : Long.parseLong(value));
+                                    break;
+                            }
                         }
-                );
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                    }
+                    addresses.add(addressResponse);
+                }
             }
 
             gasStationResponse.setGasStations(addresses);
-
             return gasStationResponse;
         });
     }

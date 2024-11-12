@@ -1,10 +1,7 @@
 package g.nsu.fuel.monitoring.controller;
 
 import g.nsu.fuel.monitoring.payload.response.GasStationAddressSummary;
-import g.nsu.fuel.monitoring.payload.response.GasStationByAddressResponse;
-import g.nsu.fuel.monitoring.payload.response.GasStationResponse;
 import g.nsu.fuel.monitoring.services.interfaces.GasStationAddressService;
-import g.nsu.fuel.monitoring.services.interfaces.GasStationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -13,8 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController

@@ -11,7 +11,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class GasStationByAddressResponse {
 
-    private Double ration;
+    private Long id;
+
+    private Double rating;
 
     private String address;
 

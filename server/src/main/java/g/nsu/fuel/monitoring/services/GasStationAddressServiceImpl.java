@@ -4,20 +4,15 @@ import g.nsu.fuel.monitoring.entities.oil.GasStation;
 import g.nsu.fuel.monitoring.entities.oil.GasStationByAddress;
 import g.nsu.fuel.monitoring.model.exception.NotInDataBaseException;
 import g.nsu.fuel.monitoring.payload.requests.AddGasStationAddressRequest;
-import g.nsu.fuel.monitoring.payload.requests.AddGasStationRequest;
 import g.nsu.fuel.monitoring.payload.response.GasStationAddressSummary;
-import g.nsu.fuel.monitoring.payload.response.GasStationResponse;
 import g.nsu.fuel.monitoring.repository.GasStationByAddressRepository;
 import g.nsu.fuel.monitoring.repository.GasStationRepository;
 import g.nsu.fuel.monitoring.repository.jdbc.GasStationAddressJdbcRepository;
-import g.nsu.fuel.monitoring.repository.jdbc.GasStationJdbcRepository;
 import g.nsu.fuel.monitoring.services.interfaces.GasStationAddressService;
-import g.nsu.fuel.monitoring.services.interfaces.GasStationService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @AllArgsConstructor

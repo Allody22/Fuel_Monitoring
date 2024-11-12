@@ -1,11 +1,12 @@
 import datetime
+import os
 
 from db_writer import DBWriter
 
 DB_SETTINGS = {
     'dbname': 'fuel_monitoring',
     'user': 'postgres',
-    'password': '0000',
+    'password': os.getenv('PG_PASSWORD', ''),  # Получаем пароль из переменной среды DB_PASSWORD
     'host': 'localhost'
 }
 
@@ -27,7 +28,7 @@ def add_fuel_info(gas_station_id, fuel_prices):
     for station in fuel_prices:
         # Информация о конкретном адресе
         address_info = {
-            'address': station['address'],
+            'address' : station['address'],
             'feedbacks': 0,  # Можете заменить на реальное значение, если доступно
             'rating': 0.0,  # Можете заменить на реальное значение, если доступно
             'updated_at': datetime.date.today()  # Текущая дата

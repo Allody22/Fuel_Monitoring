@@ -39,11 +39,10 @@ public class UserServiceImpl implements UserService {
         GasStationByAddress gasStationByAddress = gasStationByAddressRepository.findById(favoriteId)
                 .orElseThrow(() -> new NotInDataBaseException("Заправка с айди " + favoriteId));
 
-        Favorites favorites = favoriteRepository.findByAccountIdAndStationId(account, gasStationByAddress)
-                .orElseThrow(() -> new NotInDataBaseException("Избранное с айди " + favoriteId));
-
-        account.deleteFavorite(favorites);
-        favoriteRepository.delete(favorites);
+        Favorites favorites = new Favorites();
+        favorites.setAccountId(account);
+        favorites.setStationId(gasStationByAddress);
+        favoriteRepository.save(favorites);
     }
 
 
@@ -57,7 +56,7 @@ public class UserServiceImpl implements UserService {
         Account account = accountRepository.findByPhoneNumber(userName)
                 .orElseThrow(() -> new CredentialException("Invalid credentials"));
 
-        if (!gasStationByAddressRepository.existsById(favoriteId)){
+        if (!gasStationByAddressRepository.existsById(favoriteId)) {
             throw new NotInDataBaseException("Заправка с айди " + favoriteId);
         }
         Favorites favorites = favoriteRepository.findById(favoriteId)

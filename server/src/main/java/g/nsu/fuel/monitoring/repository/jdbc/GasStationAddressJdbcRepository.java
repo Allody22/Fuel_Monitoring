@@ -1,9 +1,8 @@
 package g.nsu.fuel.monitoring.repository.jdbc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import g.nsu.fuel.monitoring.payload.response.*;
+import g.nsu.fuel.monitoring.payload.response.GasStationAddressSummary;
+import g.nsu.fuel.monitoring.payload.response.OilTypeAverageWidgets;
+import g.nsu.fuel.monitoring.payload.response.OilTypePriceData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 
