@@ -27,6 +27,7 @@ def add_fuel_info(gas_station_id, fuel_prices):
     for station in fuel_prices:
         # Информация о конкретном адресе
         address_info = {
+            'address': station['address'],
             'feedbacks': 0,  # Можете заменить на реальное значение, если доступно
             'rating': 0.0,  # Можете заменить на реальное значение, если доступно
             'updated_at': datetime.date.today()  # Текущая дата

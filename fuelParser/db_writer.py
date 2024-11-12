@@ -28,9 +28,9 @@ class DBWriter:
 
     def insert_gas_station_address(self, gas_station_id, address_info):
         self.cursor.execute("""
-            INSERT INTO gas_station_address (gas_station_id, feedbacks, rating, updated_at)
-            VALUES (%s, %s, %s, %s) RETURNING id;
-        """, (gas_station_id, address_info['feedbacks'], address_info['rating'], address_info['updated_at']))
+            INSERT INTO gas_station_address (gas_station_id, address, feedbacks, rating, updated_at)
+            VALUES (%s, %s, %s, %s, %s) RETURNING id;
+        """, (gas_station_id, address_info['address'], address_info['feedbacks'], address_info['rating'], address_info['updated_at']))
         return self.cursor.fetchone()[0]
 
     def insert_oil_type(self, oil_type):
@@ -41,7 +41,7 @@ class DBWriter:
 
     def insert_oil_price(self, gas_station_address_id, oil_type, price):
         self.cursor.execute("""
-            INSERT INTO oil_type_price_address (date, price, gas_station_address_id, oil_type_id)
+            INSERT INTO oil_type_price_address_history (date, price, gas_station_address_id, oil_type_id)
             VALUES (%s, %s, %s, %s);
         """, (datetime.date.today(), price, gas_station_address_id, oil_type))
 
