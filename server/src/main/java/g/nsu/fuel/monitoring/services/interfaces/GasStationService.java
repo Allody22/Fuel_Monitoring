@@ -12,10 +12,6 @@ public interface GasStationService {
 
     void addNewGasStation(AddGasStationRequest addGasStationRequest);
 
-    void addNewGasStationAddress(AddGasStationAddressRequest addGasStationAddressRequest);
-
     void deleteGasStationById(Long id);
-
-    void deleteGasStationAddressById(Long id);
 
 }

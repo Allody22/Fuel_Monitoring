@@ -35,7 +35,7 @@ public class Account {
     @Column(name = "oil_type")
     private String oilType;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accountId")
     private List<Favorites> favorites = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.PERSIST)

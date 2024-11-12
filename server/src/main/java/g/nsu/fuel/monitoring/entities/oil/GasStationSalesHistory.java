@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "oil_type_price_address")
+@Table(name = "oil_type_price_address_history")
 public class GasStationSalesHistory {
 
     @Id

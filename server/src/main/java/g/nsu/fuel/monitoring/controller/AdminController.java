@@ -3,6 +3,7 @@ package g.nsu.fuel.monitoring.controller;
 import g.nsu.fuel.monitoring.payload.requests.AddGasStationAddressRequest;
 import g.nsu.fuel.monitoring.payload.requests.AddGasStationRequest;
 import g.nsu.fuel.monitoring.payload.response.DataResponse;
+import g.nsu.fuel.monitoring.services.interfaces.GasStationAddressService;
 import g.nsu.fuel.monitoring.services.interfaces.GasStationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -23,6 +24,8 @@ public class AdminController {
 
     private final GasStationService gasStationService;
 
+    private final GasStationAddressService gasStationAddressService;
+
     @Operation(
             summary = "Добавление новой сети заправок",
             description = """
@@ -42,7 +45,7 @@ public class AdminController {
                     """)
     @PostMapping("/gas_station_address")
     public ResponseEntity<DataResponse> addNewGasStationAddress(@RequestBody AddGasStationAddressRequest addGasStationAddressRequest) {
-        gasStationService.addNewGasStationAddress(addGasStationAddressRequest);
+        gasStationAddressService.addNewGasStationAddress(addGasStationAddressRequest);
         return ResponseEntity.ok().body(new DataResponse(true));
     }
 
@@ -65,7 +68,7 @@ public class AdminController {
                     """)
     @DeleteMapping("/gas_station_address/{gasStationAddressId}")
     public ResponseEntity<DataResponse> deleteGasStationAddress(@PathVariable Long gasStationAddressId) {
-        gasStationService.deleteGasStationAddressById(gasStationAddressId);
+        gasStationAddressService.deleteGasStationAddressById(gasStationAddressId);
         return ResponseEntity.ok().body(new DataResponse(true));
     }
 }
