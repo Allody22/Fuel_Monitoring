@@ -30,6 +30,7 @@ import javax.security.auth.login.CredentialException;
 @RestController
 @AllArgsConstructor
 @Tag(name = "00. Auth Controller", description = "API для работы с авторизацией, регистрацией и токенами.")
+@ApiResponses(@ApiResponse(responseCode = "200", useReturnTypeSchema = true))
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 

@@ -37,7 +37,6 @@ public class GasStationByAddress {
     @JoinColumn(name = "gas_station_id", nullable = false)
     private GasStation gasStation;
 
-    @OneToMany(mappedBy = "gasStationByAddress", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "gasStationByAddress", fetch = FetchType.LAZY)
     private List<GasStationSalesHistory> salesHistories;
-
 }

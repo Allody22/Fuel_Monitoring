@@ -5,7 +5,9 @@ import g.nsu.fuel.monitoring.entities.security.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -33,9 +35,20 @@ public class Account {
     @Column(name = "oil_type")
     private String oilType;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accountId")
+    private List<Favorites> favorites = new ArrayList<>();
+
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "account_roles",
             joinColumns = @JoinColumn(name = "account_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles = new LinkedHashSet<>();
+
+    public void addFavorite(Favorites favorite) {
+        favorites.add(favorite);
+    }
+
+    public void deleteFavorite(Favorites favorite) {
+        favorites.remove(favorite);
+    }
 }

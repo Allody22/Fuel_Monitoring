@@ -3,8 +3,6 @@ package g.nsu.fuel.monitoring.controller;
 import g.nsu.fuel.monitoring.payload.response.OilTypeResponse;
 import g.nsu.fuel.monitoring.services.interfaces.OilTypesService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,6 +19,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @Tag(name = "02. Oil Controller", description = "API для получения разных типов топлива по разным фильтрам, различная работа с топливом.")
+@ApiResponses(@ApiResponse(responseCode = "200", useReturnTypeSchema = true))
 @RequestMapping("/api/v1/oil")
 public class OilController {
 
@@ -31,10 +30,6 @@ public class OilController {
             description = """
                     Получение всех названий типов топлива, как строки.
                     """)
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Все типы топлива успешно получены.", content = @Content(schema = @Schema(implementation = String.class))),
-            @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера", content = @Content)
-    })
     @PostMapping("/types")
     public ResponseEntity<List<OilTypeResponse>> getAllOilTypeNames() {
         return ResponseEntity.ok().body(oilTypesService.getAllOilTypes());
