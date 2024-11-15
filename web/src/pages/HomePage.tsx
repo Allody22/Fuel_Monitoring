@@ -3,6 +3,11 @@ import Header from '../components/Header/Header';
 
 export const HomePage: React.FC = () => (
   <div>
-    <Header />
+    <Header
+      toggleSidebar={function (): void {
+        throw new Error('Function not implemented.');
+      }}
+      isSidebarOpen={false}
+    />
   </div>
 );

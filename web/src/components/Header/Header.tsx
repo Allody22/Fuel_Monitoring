@@ -1,97 +1,101 @@
-import React, { useState } from 'react';
-import { Link } from 'wouter'; 
-import { Fuel, Menu, X, LogIn, LogOut } from 'lucide-react';
-import { Button } from '../Button/Button';
-import { ModeToggle } from '../ModeToggle/ModeToggle';
-import clsx from 'clsx';
-import { useHashLocation } from '../../Hooks/useHashLocation'; // Импортируйте useHashLocation из вашего файла с хуками
+import React, { useEffect, useState } from 'react';
+import { FaBars } from 'react-icons/fa';
 
-const navigation = [
-  { name: 'Главная', href: '/' },
-  { name: 'Цены на топливо', href: '/fuel-prices' },
-  { name: 'Карта АЗС', href: '/gas-stations' },
-  { name: 'О нас', href: '/about' },
-];
+interface HeaderProps {
+  toggleSidebar: () => void;
+  isSidebarOpen: boolean;
+}
 
-export default function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [location] = useHashLocation(); // Используем ваш кастомный хук
+const Header: React.FC<HeaderProps> = ({ toggleSidebar, isSidebarOpen }) => {
+  const [isBurgerMenuVisible, setBurgerMenuVisible] = useState(false);
+  const [size, setSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
-  const handleLogin = () => setIsLoggedIn(true);
-  const handleLogout = () => setIsLoggedIn(false);
+  useEffect(() => {
+    const handleResize = () => {
+      const newWidth = window.innerWidth;
+      setSize({
+        width: newWidth,
+        height: window.innerHeight,
+      });
+
+      setBurgerMenuVisible(newWidth <= 1200);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleBurgerClick = () => {
+    toggleSidebar(); // Открытие или закрытие сайдбара
+  };
 
   return (
-    <header className="bg-background shadow-sm">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
-        <div className="flex lg:flex-1">
-          <Link href="/" className="-m-1.5 p-1.5">
-            <span className="sr-only">Fuel Price Tracker</span>
-            <Fuel className="h-8 w-auto text-primary" />
-          </Link>
+    <header
+      className={`flex min-w-[22rem] justify-between items-center relative font-dela h-16 ${
+        size.width <= 768 ? 'bg-custom-blue' : 'bg-custom-blue'
+      }`}
+    >
+      {/* Левая надпись
+      <div
+        className={`flex space-x-2 h-full relative central-text ml-8 ${
+          size.width <= 768 ? 'shift-left' : ''
+        }`}
+      >
+        <div className="flex">
+          <span
+            className={`animate__animated animate__fadeInLeft pl-8 font-medium z-10 text-[1.2rem] tracking-wider ${
+              size.width <= 768 ? 'text-white' : 'text-white'
+            }`}
+          >
+            {t('header.siberian')}
+          </span>
         </div>
-        <div className="flex lg:hidden">
-          <Button variant="ghost" className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            <span className="sr-only">Открыть главное меню</span>
-            {mobileMenuOpen ? <X className="h-6 w-6" aria-hidden="true" /> : <Menu className="h-6 w-6" aria-hidden="true" />}
-          </Button>
-        </div>
-        <div className="hidden lg:flex lg:gap-x-12">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={clsx('text-sm font-semibold leading-6', location === item.href ? 'text-primary' : 'text-muted-foreground hover:text-primary')}
-            >
-              {item.name}
-            </Link>
-          ))}
-        </div>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end lg:gap-x-4">
-          <ModeToggle />
-          {isLoggedIn ? (
-            <Button onClick={handleLogout} variant="outline">
-              <LogOut className="mr-2 h-4 w-4" />
-              Выйти
-            </Button>
-          ) : (
-            <Button onClick={handleLogin}>
-              <LogIn className="mr-2 h-4 w-4" />
-              Войти
-            </Button>
-          )}
-        </div>
-      </nav>
-      {mobileMenuOpen && (
-        <div className="lg:hidden w-full bg-background shadow-lg p-4">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={clsx('block px-3 py-2 text-base font-semibold leading-7', location === item.href ? 'text-primary' : 'text-muted-foreground hover:text-primary')}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {item.name}
-            </Link>
-          ))}
-          <div className="mt-4">
-            <ModeToggle />
-          </div>
-          <div className="mt-4">
-            {isLoggedIn ? (
-              <Button onClick={handleLogout} variant="outline" className="w-full justify-start">
-                <LogOut className="mr-2 h-4 w-4" />
-                Выйти
-              </Button>
-            ) : (
-              <Button onClick={handleLogin} className="w-full justify-start">
-                <LogIn className="mr-2 h-4 w-4" />
-                Войти
-              </Button>
-            )}
-          </div>
-        </div>
+        <span
+          className={`animate__animated animate__fadeInRight text-[1.2rem] tracking-wider font-medium ${
+            size.width <= 768 ? 'text-white' : 'text-white'
+          } neural-network`}
+        >
+          {t('header.neural')}
+        </span>
+      </div> */}
+
+      {/* Контейнер для остальных элементов */}
+      {!isBurgerMenuVisible && (
+        <nav className="flex items-center text-[1rem] mr-10 gap-3">
+          <a
+            href="#about-us"
+            className="animate__animated animate__fadeInRight delay-second px-3 py-2 rounded-full hover:bg-white hover:text-custom-blue duration-200 cursor-pointer z-10 text-white font-medium"
+          >
+          </a>
+          <a
+            href="#products"
+            className="animate__animated animate__fadeInRight delay-second px-3 py-2 rounded-full hover:bg-white hover:text-custom-blue duration-200 cursor-pointer z-10 text-white font-medium"
+          >
+          </a>
+          <a
+            href="#about"
+            className="animate__animated animate__fadeInRight delay-second px-3 py-2 rounded-full hover:bg-white hover:text-custom-blue duration-200 cursor-pointer z-10 text-white font-medium"
+          >
+            О нас
+          </a>
+        </nav>
       )}
+
+      {/* Бургер-меню */}
+      {isBurgerMenuVisible &&
+        !isSidebarOpen && ( // Проверяем, открыт ли сайдбар
+          <div className="z-20 md:block absolute top-4 right-[1rem]">
+            <button className="burger-menu" onClick={handleBurgerClick}>
+              <FaBars size={32} color="white" />
+            </button>
+          </div>
+        )}
     </header>
   );
-}
+};
+
+export default Header;
