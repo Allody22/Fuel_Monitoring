@@ -11,22 +11,16 @@ const Header: React.FC = () => {
     <>
       {/* Header */}
       <header className="bg-[#005F6A] text-white">
-        <div className="container mx-auto px-8  py-4 flex justify-between items-center">
+        <div className="container mx-auto px-16 py-4 flex justify-between items-center">
           <div className="text-2xl font-bold">Логотип</div>
 
           {/* Navigation links - hidden on small screens */}
           <nav className="hidden md:flex space-x-4">
-            <a href="#home" className="hover:text-[#FAD201] transition-colors">
-              Главная
-            </a>
-            <a href="#about" className="hover:text-[#FAD201] transition-colors">
-              О нас
-            </a>
             <a
-              href="#services"
+              href="#stations"
               className="hover:text-[#FAD201] transition-colors"
             >
-              Услуги
+              Список АЗС
             </a>
             <a
               href="#contact"
@@ -62,11 +56,11 @@ const Header: React.FC = () => {
           <a href="#home" className="block px-4 py-2 hover:bg-[#FAD201]">
             Главная
           </a>
+          <a href="#stations" className="block px-4 py-2 hover:bg-[#FAD201]">
+            Список АЗС
+          </a>
           <a href="#about" className="block px-4 py-2 hover:bg-[#FAD201]">
             О нас
-          </a>
-          <a href="#services" className="block px-4 py-2 hover:bg-[#FAD201]">
-            Услуги
           </a>
           <a href="#contact" className="block px-4 py-2 hover:bg-[#FAD201]">
             Контакты
