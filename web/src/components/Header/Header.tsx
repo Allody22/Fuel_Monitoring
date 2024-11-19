@@ -1,100 +1,81 @@
-import React, { useEffect, useState } from 'react';
-import { FaBars } from 'react-icons/fa';
+import React, { useState } from 'react';
 
-interface HeaderProps {
-  toggleSidebar: () => void;
-  isSidebarOpen: boolean;
-}
+const Header: React.FC = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-const Header: React.FC<HeaderProps> = ({ toggleSidebar, isSidebarOpen }) => {
-  const [isBurgerMenuVisible, setBurgerMenuVisible] = useState(false);
-  const [size, setSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
-
-  useEffect(() => {
-    const handleResize = () => {
-      const newWidth = window.innerWidth;
-      setSize({
-        width: newWidth,
-        height: window.innerHeight,
-      });
-
-      setBurgerMenuVisible(newWidth <= 1200);
-    };
-
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const handleBurgerClick = () => {
-    toggleSidebar(); // Открытие или закрытие сайдбара
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
   };
 
   return (
-    <header
-      className={`flex min-w-[22rem] justify-between items-center relative font-dela h-16 ${
-        size.width <= 768 ? 'bg-custom-blue' : 'bg-custom-blue'
-      }`}
-    >
-      {/* Левая надпись
-      <div
-        className={`flex space-x-2 h-full relative central-text ml-8 ${
-          size.width <= 768 ? 'shift-left' : ''
-        }`}
-      >
-        <div className="flex">
-          <span
-            className={`animate__animated animate__fadeInLeft pl-8 font-medium z-10 text-[1.2rem] tracking-wider ${
-              size.width <= 768 ? 'text-white' : 'text-white'
-            }`}
-          >
-            {t('header.siberian')}
-          </span>
-        </div>
-        <span
-          className={`animate__animated animate__fadeInRight text-[1.2rem] tracking-wider font-medium ${
-            size.width <= 768 ? 'text-white' : 'text-white'
-          } neural-network`}
-        >
-          {t('header.neural')}
-        </span>
-      </div> */}
+    <>
+      {/* Header */}
+      <header className="bg-[#005F6A] text-white">
+        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div className="text-2xl font-bold">Логотип</div>
 
-      {/* Контейнер для остальных элементов */}
-      {!isBurgerMenuVisible && (
-        <nav className="flex items-center text-[1rem] mr-10 gap-3">
-          <a
-            href="#about-us"
-            className="animate__animated animate__fadeInRight delay-second px-3 py-2 rounded-full hover:bg-white hover:text-custom-blue duration-200 cursor-pointer z-10 text-white font-medium"
+          {/* Navigation links - hidden on small screens */}
+          <nav className="hidden md:flex space-x-4">
+            <a href="#home" className="hover:text-[#FAD201] transition-colors">
+              Главная
+            </a>
+            <a href="#about" className="hover:text-[#FAD201] transition-colors">
+              О нас
+            </a>
+            <a href="#services" className="hover:text-[#FAD201] transition-colors">
+              Услуги
+            </a>
+            <a href="#contact" className="hover:text-[#FAD201] transition-colors">
+              Контакты
+            </a>
+          </nav>
+
+          {/* Burger menu - visible on small screens */}
+          <button
+            className="md:hidden text-3xl focus:outline-none"
+            onClick={toggleSidebar}
           >
+            ☰
+          </button>
+        </div>
+      </header>
+
+      {/* Sidebar */}
+      <div
+        className={`fixed top-0 left-0 h-full w-[10rem] bg-[#005F6A] text-white transform ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        } transition-transform duration-300 ease-in-out z-50`}
+      >
+        <button
+          className="text-3xl p-4 focus:outline-none"
+          onClick={toggleSidebar}
+        >
+          ✕
+        </button>
+        <nav className="mt-8 space-y-4">
+          <a href="#home" className="block px-4 py-2 hover:bg-[#FAD201]">
+            Главная
           </a>
-          <a
-            href="#products"
-            className="animate__animated animate__fadeInRight delay-second px-3 py-2 rounded-full hover:bg-white hover:text-custom-blue duration-200 cursor-pointer z-10 text-white font-medium"
-          >
-          </a>
-          <a
-            href="#about"
-            className="animate__animated animate__fadeInRight delay-second px-3 py-2 rounded-full hover:bg-white hover:text-custom-blue duration-200 cursor-pointer z-10 text-white font-medium"
-          >
+          <a href="#about" className="block px-4 py-2 hover:bg-[#FAD201]">
             О нас
           </a>
+          <a href="#services" className="block px-4 py-2 hover:bg-[#FAD201]">
+            Услуги
+          </a>
+          <a href="#contact" className="block px-4 py-2 hover:bg-[#FAD201]">
+            Контакты
+          </a>
         </nav>
-      )}
+      </div>
 
-      {/* Бургер-меню */}
-      {isBurgerMenuVisible &&
-        !isSidebarOpen && ( // Проверяем, открыт ли сайдбар
-          <div className="z-20 md:block absolute top-4 right-[1rem]">
-            <button className="burger-menu" onClick={handleBurgerClick}>
-              <FaBars size={32} color="white" />
-            </button>
-          </div>
-        )}
-    </header>
+      {/* Overlay for closing the sidebar */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black opacity-50 z-40"
+          onClick={toggleSidebar}
+        ></div>
+      )}
+    </>
   );
 };
 
