@@ -11,7 +11,7 @@ const Header: React.FC = () => {
     <>
       {/* Header */}
       <header className="bg-[#005F6A] text-white">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        <div className="container mx-auto px-8  py-4 flex justify-between items-center">
           <div className="text-2xl font-bold">Логотип</div>
 
           {/* Navigation links - hidden on small screens */}
@@ -22,10 +22,16 @@ const Header: React.FC = () => {
             <a href="#about" className="hover:text-[#FAD201] transition-colors">
               О нас
             </a>
-            <a href="#services" className="hover:text-[#FAD201] transition-colors">
+            <a
+              href="#services"
+              className="hover:text-[#FAD201] transition-colors"
+            >
               Услуги
             </a>
-            <a href="#contact" className="hover:text-[#FAD201] transition-colors">
+            <a
+              href="#contact"
+              className="hover:text-[#FAD201] transition-colors"
+            >
               Контакты
             </a>
           </nav>
