@@ -12,6 +12,7 @@
   "dependencies": {
     "@mordv/utils": "^0.0.21",
     "@react-spring/web": "^9.7.2",
+    "axios": "^1.7.7",
     "clsx": "^2.1.1",
     "immer": "^10.0.2",
     "lucide-react": "^0.454.0",

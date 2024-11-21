@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
+import LoginForm from '../LoginForm/LoginForm';
+import RegistrationForm from '../RegistrationForm/RegistrationForm';
 
 const Header: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegistration, setShowRegistration] = useState(false);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -28,6 +32,18 @@ const Header: React.FC = () => {
             >
               Контакты
             </a>
+            <button
+              onClick={() => setShowLogin(true)}
+              className="hover:text-[#FAD201] transition-colors"
+            >
+              Вход
+            </button>
+            <button
+              onClick={() => setShowRegistration(true)}
+              className="hover:text-[#FAD201] transition-colors"
+            >
+              Регистрация
+            </button>
           </nav>
 
           {/* Burger menu - visible on small screens */}
@@ -53,18 +69,30 @@ const Header: React.FC = () => {
           ✕
         </button>
         <nav className="mt-8 space-y-4">
-          <a href="#home" className="block px-4 py-2 hover:bg-[#FAD201]">
-            Главная
-          </a>
           <a href="#stations" className="block px-4 py-2 hover:bg-[#FAD201]">
             Список АЗС
-          </a>
-          <a href="#about" className="block px-4 py-2 hover:bg-[#FAD201]">
-            О нас
           </a>
           <a href="#contact" className="block px-4 py-2 hover:bg-[#FAD201]">
             Контакты
           </a>
+          <button
+            onClick={() => {
+              setShowLogin(true);
+              toggleSidebar();
+            }}
+            className="block px-4 py-2 hover:bg-[#FAD201]"
+          >
+            Вход
+          </button>
+          <button
+            onClick={() => {
+              setShowRegistration(true);
+              toggleSidebar();
+            }}
+            className="block px-4 py-2 hover:bg-[#FAD201]"
+          >
+            Регистрация
+          </button>
         </nav>
       </div>
 
@@ -74,6 +102,31 @@ const Header: React.FC = () => {
           className="fixed inset-0 bg-black opacity-50 z-40"
           onClick={toggleSidebar}
         ></div>
+      )}
+
+      {/* Модальные окна для входа и регистрации */}
+      {showLogin && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <LoginForm />
+          <button
+            onClick={() => setShowLogin(false)}
+            className="absolute top-4 right-4 text-white text-2xl"
+          >
+            &times;
+          </button>
+        </div>
+      )}
+
+      {showRegistration && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <RegistrationForm />
+          <button
+            onClick={() => setShowRegistration(false)}
+            className="absolute top-4 right-4 text-white text-2xl"
+          >
+            &times;
+          </button>
+        </div>
       )}
     </>
   );
