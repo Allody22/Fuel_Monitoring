@@ -22,9 +22,10 @@ public class GasStationsAddressController {
     private final GasStationAddressService gasStationAddressService;
 
     @Operation(
-            summary = "Получение  о сетях заправок в нашей БД",
+            summary = "Получение сводке об определённом филиале заправке",
             description = """
-                    Получение всех компаний АЗС.
+                    Передаётся айди определённого филиала заправки и количество дней.
+                    Возвращается информации об изменении цен на это филиале АЗС для существующих типов топлива за запрашиваемый интервальный день.
                     """)
     @GetMapping("/summary/{id}")
     public ResponseEntity<GasStationAddressSummary> getGasStationSummary(@PathVariable Long id, @RequestParam(defaultValue = "30") int interval) {
