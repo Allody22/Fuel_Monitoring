@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import { useLocation } from 'wouter';
 
 const Header: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [location, navigate] = useLocation();
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  const navItems = [
-    { href: "#stations", label: "Список АЗС" },
-    { href: "#contact", label: "Контакты" },
-    { href: "/auth", label: "Авторизоваться" },
-  ];
+  // Условное меню в зависимости от текущего пути
+  const navItems = location === '/auth'
+    ? [
+        { action: () => navigate('/'), label: 'Главная' },
+      ]
+    : [
+        { href: '#stations', label: 'Список АЗС' },
+        { href: '#contact', label: 'Контакты' },
+        { action: () => navigate('/auth'), label: 'Авторизоваться' },
+      ];
 
   return (
     <>
@@ -21,14 +28,14 @@ const Header: React.FC = () => {
             <span className="text-2xl font-bold text-white">АЗС Инфо</span>
 
             <nav className="hidden md:flex space-x-8">
-              {navItems.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
+              {navItems.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={item.action || undefined}
                   className="text-white hover:text-[#FAD201] transition-colors duration-200 ease-in-out"
                 >
                   {item.label}
-                </a>
+                </button>
               ))}
             </nav>
 
@@ -47,10 +54,10 @@ const Header: React.FC = () => {
         {isSidebarOpen && (
           <>
             <motion.div
-              initial={{ x: "100%" }}
+              initial={{ x: '100%' }}
               animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "tween", duration: 0.3 }}
+              exit={{ x: '100%' }}
+              transition={{ type: 'tween', duration: 0.3 }}
               className="fixed top-0 right-0 h-full w-64 bg-[#005F6A] text-white z-50 overflow-y-auto"
             >
               <div className="flex justify-between items-center p-4 border-b border-[#FAD201]">
@@ -64,15 +71,17 @@ const Header: React.FC = () => {
                 </button>
               </div>
               <nav className="mt-8 space-y-4 px-4">
-                {navItems.map((item) => (
-                  <div key={item.href} className="block">
-                    <a
-                      href={item.href}
-                      onClick={toggleSidebar}
-                      className="text-white hover:text-[#FAD201] transition-colors duration-200 ease-in-out"
+                {navItems.map((item, index) => (
+                  <div key={index} className="block">
+                    <button
+                      onClick={() => {
+                        if (item.action) item.action();
+                        toggleSidebar();
+                      }}
+                      className="text-white hover:text-[#FAD201] transition-colors duration-200 ease-in-out w-full text-left"
                     >
                       {item.label}
-                    </a>
+                    </button>
                   </div>
                 ))}
               </nav>
@@ -93,4 +102,3 @@ const Header: React.FC = () => {
 };
 
 export default Header;
-

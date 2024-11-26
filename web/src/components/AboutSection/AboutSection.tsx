@@ -18,11 +18,11 @@ const AboutSection: React.FC = () => {
         </div>
 
         {/* Блок с картинкой */}
-        <div className="md:w-1/2 flex justify-center">
+        <div className="md:w-1/2 xl:flex-column flex justify-center ">
           <img
             src="/images/gasStationImage.png"
             alt="Машина на заправке"
-            className="rounded-lg shadow-lg"
+            className="rounded-lg shadow-lg max-w-[80%] object-contain"
           />
         </div>
       </div>
