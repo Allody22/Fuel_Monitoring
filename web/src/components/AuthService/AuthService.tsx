@@ -5,10 +5,13 @@ const apiClient = axios.create({
 });
 
 const AuthService = {
-  login: async (email: string, password: string) => {
-    const response = await apiClient.post('/login', { email, password });
+  login: async (phoneNumber: string, password: string, fingerprint: string) => {
+    const response = await apiClient.post('/login', { phoneNumber, password, fingerprint }, {
+      withCredentials: true,  // Обязательно для отправки cookies
+    });
     return response.data;
   },
+
 
   logout: async () => {
     const response = await apiClient.post('/logout');
@@ -20,10 +23,13 @@ const AuthService = {
     return response.data;
   },
 
-  register: async (email: string, password: string) => {
+  register: async (phoneNumber: string, password: string, fingerprint: string) => {
     const response = await apiClient.post('/registration', {
-      email,
+      phoneNumber,
       password,
+      fingerprint
+    }, {
+      withCredentials: true,
     });
     return response.data;
   },

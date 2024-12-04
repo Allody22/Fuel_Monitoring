@@ -6,7 +6,6 @@ import g.nsu.fuel.monitoring.payload.requests.RegistrationRequest;
 import g.nsu.fuel.monitoring.payload.response.DataResponse;
 import g.nsu.fuel.monitoring.payload.response.ErrorResponse;
 import g.nsu.fuel.monitoring.payload.response.JwtResponse;
-import g.nsu.fuel.monitoring.payload.response.RefreshResponse;
 import g.nsu.fuel.monitoring.services.TokensService;
 import g.nsu.fuel.monitoring.services.interfaces.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -90,8 +90,12 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера", content = @Content)
     })
     @PostMapping("/registration")
-    public ResponseEntity<RefreshResponse> registration(@RequestBody RegistrationRequest request) {
-        return ResponseEntity.ok(authService.register(request.getPhoneNumber(), request.getPassword(), request.getFingerprint()));
+    public ResponseEntity<?> registration(@RequestBody @Valid RegistrationRequest request) {
+        var jwtAndRefresh = authService.register(request.getPhoneNumber(), request.getPassword(), request.getFingerprint());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtAndRefresh.b.toString())
+                .body(jwtAndRefresh.a);
     }
 
     @Operation(
@@ -107,7 +111,11 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера", content = @Content)
     })
     @PostMapping("/login")
-    public ResponseEntity<RefreshResponse> login(@RequestBody LoginRequest loginRequest) throws CredentialException {
-        return ResponseEntity.ok(authService.login(loginRequest.getUsername(), loginRequest.getPassword(), loginRequest.getFingerprint()));
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest loginRequest) throws CredentialException {
+        var pair = authService.login(loginRequest.getPhoneNumber(), loginRequest.getPassword(), loginRequest.getFingerprint());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, pair.b.toString())
+                .body(pair.a);
     }
 }
