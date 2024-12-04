@@ -1,7 +1,7 @@
 package g.nsu.fuel.monitoring.controller;
 
+import g.nsu.fuel.monitoring.payload.requests.FingerprintRequest;
 import g.nsu.fuel.monitoring.payload.requests.LoginRequest;
-import g.nsu.fuel.monitoring.payload.requests.RefreshFingerprintRequest;
 import g.nsu.fuel.monitoring.payload.requests.RegistrationRequest;
 import g.nsu.fuel.monitoring.payload.response.DataResponse;
 import g.nsu.fuel.monitoring.payload.response.ErrorResponse;
@@ -14,10 +14,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,11 +53,14 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера", content = @Content)
     })
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody RefreshFingerprintRequest request) {
-        tokensService.processLogout(request.getRefreshToken(), request.getFingerprint());
-        return ResponseEntity.ok().body(new DataResponse(true));
-    }
+    public ResponseEntity<?> logout(HttpServletRequest request, @RequestBody FingerprintRequest fingerprintRequest) {
+        tokensService.processLogout(request, fingerprintRequest.getFingerprint());
+        ResponseCookie jwtRefreshCookie = tokensService.createEmptyRefreshCookie();
 
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
+                .body(new DataResponse(true));
+    }
 
     @Operation(
             summary = "Обновление JWT токена без создания нового рефреш-токена.",
@@ -72,8 +77,8 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера", content = @Content)
     })
     @PostMapping("/refresh/jwt")
-    public ResponseEntity<?> refreshTokenPost(@RequestBody @Valid RefreshFingerprintRequest request) {
-        JwtResponse jwtResponse = tokensService.createNewJwt(request.getRefreshToken(), request.getFingerprint());
+    public ResponseEntity<?> refreshTokenPost(HttpServletRequest request, @RequestBody @Valid FingerprintRequest fingerPrintRequest) {
+        JwtResponse jwtResponse = tokensService.createNewJwt(request, fingerPrintRequest.getFingerprint());
 
         return ResponseEntity.ok()
                 .body(jwtResponse);
