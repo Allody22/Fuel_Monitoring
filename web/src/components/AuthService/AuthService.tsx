@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'http://localhost:8080/api/vi/auth',
+  baseURL: 'http://localhost:8080/api/v1/auth',
 });
 
 const AuthService = {
