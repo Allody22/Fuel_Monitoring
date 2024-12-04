@@ -1,25 +1,27 @@
 import axios from 'axios';
 
-const API_URL = '/api/vi/auth';
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8080/api/v1/auth',
+});
 
 const AuthService = {
   login: async (email: string, password: string) => {
-    const response = await axios.post(`${API_URL}/login`, { email, password });
+    const response = await apiClient.post('/login', { email, password });
     return response.data;
   },
 
   logout: async () => {
-    const response = await axios.post(`${API_URL}/logout`);
+    const response = await apiClient.post('/logout');
     return response.data;
   },
 
   refreshToken: async () => {
-    const response = await axios.post(`${API_URL}/refresh/jwt`);
+    const response = await apiClient.post('/refresh/jwt');
     return response.data;
   },
 
   register: async (email: string, password: string) => {
-    const response = await axios.post(`${API_URL}/registration`, {
+    const response = await apiClient.post('/registration', {
       email,
       password,
     });
