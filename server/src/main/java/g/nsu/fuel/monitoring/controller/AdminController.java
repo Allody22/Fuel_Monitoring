@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class AdminController {
                     Добавление новой сети заправок в БД, если такой еще не существует.
                     """)
     @PostMapping("/gas_station")
-    public ResponseEntity<DataResponse> addNewGasStation(@RequestBody AddGasStationRequest gasStationRequest) {
+    public ResponseEntity<DataResponse> addNewGasStation(@RequestBody @Valid AddGasStationRequest gasStationRequest) {
         gasStationService.addNewGasStation(gasStationRequest);
         return ResponseEntity.ok().body(new DataResponse(true));
     }
@@ -44,7 +45,7 @@ public class AdminController {
                     Добавление нового адреса в определённую сеть заправок.
                     """)
     @PostMapping("/gas_station_address")
-    public ResponseEntity<DataResponse> addNewGasStationAddress(@RequestBody AddGasStationAddressRequest addGasStationAddressRequest) {
+    public ResponseEntity<DataResponse> addNewGasStationAddress(@RequestBody @Valid AddGasStationAddressRequest addGasStationAddressRequest) {
         gasStationAddressService.addNewGasStationAddress(addGasStationAddressRequest);
         return ResponseEntity.ok().body(new DataResponse(true));
     }
@@ -55,7 +56,7 @@ public class AdminController {
                     Добавление новой сети заправок в БД, если такой еще не существует.
                     """)
     @DeleteMapping("/gas_station/{gasStationId}")
-    public ResponseEntity<DataResponse> deleteGasStation(@PathVariable Long gasStationId) {
+    public ResponseEntity<DataResponse> deleteGasStation(@PathVariable("gasStationId") Long gasStationId) {
         gasStationService.deleteGasStationById(gasStationId);
         return ResponseEntity.ok().body(new DataResponse(true));
     }
@@ -67,7 +68,7 @@ public class AdminController {
                     Удаление адреса из определённую сеть заправок.
                     """)
     @DeleteMapping("/gas_station_address/{gasStationAddressId}")
-    public ResponseEntity<DataResponse> deleteGasStationAddress(@PathVariable Long gasStationAddressId) {
+    public ResponseEntity<DataResponse> deleteGasStationAddress(@PathVariable("gasStationAddressId") Long gasStationAddressId) {
         gasStationAddressService.deleteGasStationAddressById(gasStationAddressId);
         return ResponseEntity.ok().body(new DataResponse(true));
     }

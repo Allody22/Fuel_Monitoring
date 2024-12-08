@@ -1,7 +1,9 @@
 package g.nsu.fuel.monitoring.services.interfaces;
 
 import g.nsu.fuel.monitoring.payload.response.AccountInfoResponse;
-import g.nsu.fuel.monitoring.payload.response.RefreshResponse;
+import g.nsu.fuel.monitoring.payload.response.JwtResponse;
+import org.antlr.v4.runtime.misc.Pair;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.security.auth.login.CredentialException;
@@ -19,7 +21,7 @@ public interface AuthService {
      * @param password пароль пользователя
      * @return объект response, содержащий JWT и Refresh токен, созданный по данным пользователя.
      */
-    RefreshResponse login(String username, String password, String fingerPrint) throws CredentialException;
+    Pair<JwtResponse, ResponseCookie> login(String username, String password, String fingerPrint) throws CredentialException;
 
     /**
      * Регистрация нового пользователя в системе.
@@ -28,7 +30,7 @@ public interface AuthService {
      * @param password пароль пользователя
      * @return объект response, содержащий JWT и Refresh токен, созданный по данным пользователя.
      */
-    RefreshResponse register(String username, String password, String fingerprint);
+    Pair<JwtResponse, ResponseCookie> register(String username, String password, String fingerprint);
 
     /**
      * Получение информации о текущем пользователе на основе его токена.

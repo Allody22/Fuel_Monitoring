@@ -7,7 +7,7 @@ export const AuthPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
   const [formData, setFormData] = useState({
-    email: '',
+    phoneNumber: '',
     password: '',
     name: '',
   });
@@ -23,10 +23,13 @@ export const AuthPage: React.FC = () => {
 
     try {
       if (activeTab === 'login') {
-        const response = await AuthService.login(formData.email, formData.password);
+        const response = await AuthService.login(formData.phoneNumber, formData.password, "Unused");
         alert('Успешный вход: ' + JSON.stringify(response));
+        const expirationDate = new Date(Date.now() + response.expires_in).toUTCString();
+        document.cookie = `access_token=${response.access_token}; expires=${expirationDate}; path=/; Secure; SameSite=Strict`;
+
       } else {
-        const response = await AuthService.register(formData.email, formData.password);
+        const response = await AuthService.register(formData.phoneNumber, formData.password, "Unused");
         alert('Успешная регистрация: ' + JSON.stringify(response));
       }
     } catch (error: any) {
@@ -87,14 +90,14 @@ export const AuthPage: React.FC = () => {
                 </div>
               )}
               <div className="mb-4">
-                <label htmlFor="email" className="block text-sm font-bold text-gray-700 mb-2">
-                  Email
+                <label htmlFor="phoneNumber" className="block text-sm font-bold text-gray-700 mb-2">
+                  Номер телефона
                 </label>
                 <input
-                  id="email"
-                  type="email"
+                  id="phoneNumber"
+                  type="phoneNumber"
                   placeholder="name@example.com"
-                  value={formData.email}
+                  value={formData.phoneNumber}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#005F6A]"
                   required
