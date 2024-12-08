@@ -53,7 +53,7 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера", content = @Content)
     })
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, @RequestBody FingerprintRequest fingerprintRequest) {
+    public ResponseEntity<?> logout(HttpServletRequest request, @RequestBody @Valid FingerprintRequest fingerprintRequest) {
         tokensService.processLogout(request, fingerprintRequest.getFingerprint());
         ResponseCookie jwtRefreshCookie = tokensService.createEmptyRefreshCookie();
 

@@ -8,7 +8,6 @@ import lombok.Data;
 @Data
 public class FingerprintRequest {
 
-
     @Schema(description = "Фингерпринт пользователя.", example = "hello world i made it")
     @NotNull(message = "Пожалуйста, введите фингерпринт")
     @NotBlank(message = "Пожалуйста, введите фингерпринт")
