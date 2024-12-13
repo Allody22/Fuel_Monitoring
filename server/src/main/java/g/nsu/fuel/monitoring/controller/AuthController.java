@@ -1,12 +1,11 @@
 package g.nsu.fuel.monitoring.controller;
 
+import g.nsu.fuel.monitoring.payload.requests.FingerprintRequest;
 import g.nsu.fuel.monitoring.payload.requests.LoginRequest;
-import g.nsu.fuel.monitoring.payload.requests.RefreshFingerprintRequest;
 import g.nsu.fuel.monitoring.payload.requests.RegistrationRequest;
 import g.nsu.fuel.monitoring.payload.response.DataResponse;
 import g.nsu.fuel.monitoring.payload.response.ErrorResponse;
 import g.nsu.fuel.monitoring.payload.response.JwtResponse;
-import g.nsu.fuel.monitoring.payload.response.RefreshResponse;
 import g.nsu.fuel.monitoring.services.TokensService;
 import g.nsu.fuel.monitoring.services.interfaces.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,9 +14,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,11 +53,14 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера", content = @Content)
     })
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody RefreshFingerprintRequest request) {
-        tokensService.processLogout(request.getRefreshToken(), request.getFingerprint());
-        return ResponseEntity.ok().body(new DataResponse(true));
-    }
+    public ResponseEntity<?> logout(HttpServletRequest request, @RequestBody @Valid FingerprintRequest fingerprintRequest) {
+        tokensService.processLogout(request, fingerprintRequest.getFingerprint());
+        ResponseCookie jwtRefreshCookie = tokensService.createEmptyRefreshCookie();
 
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtRefreshCookie.toString())
+                .body(new DataResponse(true));
+    }
 
     @Operation(
             summary = "Обновление JWT токена без создания нового рефреш-токена.",
@@ -72,8 +77,8 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера", content = @Content)
     })
     @PostMapping("/refresh/jwt")
-    public ResponseEntity<?> refreshTokenPost(@RequestBody @Valid RefreshFingerprintRequest request) {
-        JwtResponse jwtResponse = tokensService.createNewJwt(request.getRefreshToken(), request.getFingerprint());
+    public ResponseEntity<?> refreshTokenPost(HttpServletRequest request, @RequestBody @Valid FingerprintRequest fingerPrintRequest) {
+        JwtResponse jwtResponse = tokensService.createNewJwt(request, fingerPrintRequest.getFingerprint());
 
         return ResponseEntity.ok()
                 .body(jwtResponse);
@@ -90,8 +95,12 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера", content = @Content)
     })
     @PostMapping("/registration")
-    public ResponseEntity<RefreshResponse> registration(@RequestBody RegistrationRequest request) {
-        return ResponseEntity.ok(authService.register(request.getPhoneNumber(), request.getPassword(), request.getFingerprint()));
+    public ResponseEntity<?> registration(@RequestBody @Valid RegistrationRequest request) {
+        var jwtAndRefresh = authService.register(request.getPhoneNumber(), request.getPassword(), request.getFingerprint());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, jwtAndRefresh.b.toString())
+                .body(jwtAndRefresh.a);
     }
 
     @Operation(
@@ -107,7 +116,11 @@ public class AuthController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера", content = @Content)
     })
     @PostMapping("/login")
-    public ResponseEntity<RefreshResponse> login(@RequestBody LoginRequest loginRequest) throws CredentialException {
-        return ResponseEntity.ok(authService.login(loginRequest.getUsername(), loginRequest.getPassword(), loginRequest.getFingerprint()));
+    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest loginRequest) throws CredentialException {
+        var pair = authService.login(loginRequest.getPhoneNumber(), loginRequest.getPassword(), loginRequest.getFingerprint());
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, pair.b.toString())
+                .body(pair.a);
     }
 }
