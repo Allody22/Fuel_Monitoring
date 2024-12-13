@@ -2,6 +2,7 @@ package g.nsu.fuel.monitoring.services;
 
 
 import g.nsu.fuel.monitoring.configuration.security.jwt.JwtUtils;
+import g.nsu.fuel.monitoring.entities.security.Role;
 import g.nsu.fuel.monitoring.entities.user.Account;
 import g.nsu.fuel.monitoring.model.exception.UserAlreadyExistException;
 import g.nsu.fuel.monitoring.payload.response.AccountInfoResponse;
@@ -12,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,7 +72,15 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AccountInfoResponse getAccountInfo(UserDetails userDetails) {
-        return null;
+    public AccountInfoResponse getAccountInfo(UserDetailsImpl userDetails) throws CredentialException {
+        Account account = accountRepository.findById(userDetails.getId())
+                .orElseThrow(()-> new CredentialException("Пожалуйста перезайдите в аккаунт еще раз"));
+
+        return AccountInfoResponse.builder()
+                .id(account.getId())
+                .phoneNumber(account.getPhoneNumber())
+                .roles(account.getRoles().stream().map(Role::getRoleName).toList())
+                .oilType(account.getOilType())
+                .build();
     }
 }

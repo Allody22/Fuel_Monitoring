@@ -21,10 +21,15 @@ const apiClient = axios.create({
   baseURL: 'http://localhost:8080/api/v1/stations',
 });
 
+const userApiClient = axios.create({
+  baseURL: 'http://localhost:8080/api/v1/user',
+});
+
 export const GasStationsPage: React.FC = () => {
   const [gasStations, setGasStations] = useState<GasStationsPage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [favorites, setFavorites] = useState<number[]>([]);
   const [, navigate] = useLocation();
 
   useEffect(() => {
@@ -33,7 +38,7 @@ export const GasStationsPage: React.FC = () => {
         setIsLoading(true);
         const response = await apiClient.get('/all', {
           headers: {
-            Authorization: `Bearer ${document.cookie.replace(/(?:(?:^|.*;\\s*)access_token\\s*=\\s*([^;]*).*$)|^.*$/, '$1')}`,
+            Authorization: `Bearer ${document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*=\s*([^;]*).*$)|^.*$/, '$1')}`,
           },
         });
         setGasStations(response.data);
@@ -44,8 +49,45 @@ export const GasStationsPage: React.FC = () => {
       }
     };
 
+    const fetchFavorites = async () => {
+      try {
+        const response = await userApiClient.get('/favorites', {
+          headers: {
+            Authorization: `Bearer ${document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*=\s*([^;]*).*$)|^.*$/, '$1')}`,
+          },
+        });
+        setFavorites(response.data.map((fav: { id: number }) => fav.id));
+      } catch (err: any) {
+        console.error('Не удалось загрузить избранное:', err);
+      }
+    };
+
     fetchGasStations();
+    fetchFavorites();
   }, []);
+
+  const toggleFavorite = async (stationId: number) => {
+    try {
+      const isFavorite = favorites.includes(stationId);
+      if (isFavorite) {
+        await userApiClient.delete(`/favorites/${stationId}`, {
+          headers: {
+            Authorization: `Bearer ${document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*=\s*([^;]*).*$)|^.*$/, '$1')}`,
+          },
+        });
+        setFavorites(favorites.filter((id) => id !== stationId));
+      } else {
+        await userApiClient.post(`/favorites/${stationId}`, null, {
+          headers: {
+            Authorization: `Bearer ${document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*=\s*([^;]*).*$)|^.*$/, '$1')}`,
+          },
+        });
+        setFavorites([...favorites, stationId]);
+      }
+    } catch (err: any) {
+      console.error('Ошибка при обновлении избранного:', err);
+    }
+  };
 
   return (
       <>
@@ -80,13 +122,19 @@ export const GasStationsPage: React.FC = () => {
                                 <li key={addrIndex} className="mb-4">
                                   <p className="text-gray-600">Адрес: {addressInfo.address}</p>
                                   <p className="text-gray-500 text-sm">Рейтинг: {addressInfo.rating} ⭐</p>
-                                  <p className="text-gray-500 text-sm">Отзывы: {addressInfo.feedbacks}</p>
-                                  <p className="text-gray-500 text-sm">Обновлено: {new Date(addressInfo.updatedAt).toLocaleDateString()}</p>
+                                  <p className="text-gray-500 text-sm">Количество отзывов: {addressInfo.feedbacks}</p>
+                                  <p className="text-gray-500 text-sm">Дата последнего обновления: {new Date(addressInfo.updatedAt).toLocaleDateString()}</p>
                                   <button
                                       onClick={() => navigate(`/gas-stations/address/summary/${addressInfo.id}`)}
                                       className="mt-2 px-4 py-2 bg-[#005F6A] text-white rounded-lg hover:bg-[#004653] focus:outline-none focus:ring-2 focus:ring-[#FAD201]"
                                   >
                                     Посмотреть сводку
+                                  </button>
+                                  <button
+                                      onClick={() => toggleFavorite(addressInfo.id)}
+                                      className={`mt-2 ml-2 px-4 py-2 rounded-lg focus:outline-none focus:ring-2 ${favorites.includes(addressInfo.id) ? 'bg-red-500 text-white hover:bg-red-400' : 'bg-green-500 text-white hover:bg-green-400'}`}
+                                  >
+                                    {favorites.includes(addressInfo.id) ? 'Удалить из избранного' : 'Добавить в избранное'}
                                   </button>
                                 </li>
                             ))}

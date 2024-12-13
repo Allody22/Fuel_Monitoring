@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { useLocation } from 'wouter';
 
 const Header: React.FC = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [location, navigate] = useLocation();
 
     const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-    // Условное меню в зависимости от текущего пути
+    useEffect(() => {
+        const token = document.cookie.replace(/(?:(?:^|.*;\s*)access_token\s*=\s*([^;]*).*$)|^.*$/, '$1');
+        setIsAuthenticated(!!token);
+    }, []);
+
+    // Условное меню в зависимости от текущего пути и статуса авторизации
     const navItems = location === '/auth'
         ? [
             { action: () => navigate('/'), label: 'Главная' },
@@ -17,9 +23,10 @@ const Header: React.FC = () => {
         : [
             { action: () => navigate('/gas-stations'), label: 'Список АЗС' },
             { href: '#contact', label: 'Контакты' },
-            { action: () => navigate('/auth'), label: 'Авторизоваться' },
+            isAuthenticated
+                ? { action: () => navigate('/profile'), label: 'Профиль' }
+                : { action: () => navigate('/auth'), label: 'Авторизоваться' },
         ];
-
 
     return (
         <>

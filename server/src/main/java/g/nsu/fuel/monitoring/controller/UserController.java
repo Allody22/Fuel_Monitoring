@@ -1,6 +1,8 @@
 package g.nsu.fuel.monitoring.controller;
 
 import g.nsu.fuel.monitoring.payload.response.DataResponse;
+import g.nsu.fuel.monitoring.payload.response.GasStationByAddressResponse;
+import g.nsu.fuel.monitoring.services.UserDetailsImpl;
 import g.nsu.fuel.monitoring.services.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.CredentialException;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -32,7 +35,7 @@ public class UserController {
                     """)
     @PostMapping("/favorites/{stationId}")
     public ResponseEntity<DataResponse> addFavorites(@AuthenticationPrincipal UserDetails user, @PathVariable Long stationId) throws CredentialException {
-        userService.addFavorite(user,stationId);
+        userService.addFavorite(user, stationId);
         return ResponseEntity.ok().body(new DataResponse(true));
     }
 
@@ -43,7 +46,17 @@ public class UserController {
                     """)
     @DeleteMapping("/favorites/{stationId}")
     public ResponseEntity<DataResponse> deleteFavorites(@AuthenticationPrincipal UserDetails user, @PathVariable Long stationId) throws CredentialException {
-        userService.deleteFavorite(user,stationId);
+        userService.deleteFavorite(user, stationId);
         return ResponseEntity.ok().body(new DataResponse(true));
+    }
+
+
+    @Operation(
+            summary = "Получение всего списка избранных АЗС пользователя.",
+            description = """
+                    """)
+    @GetMapping("/favorites")
+    public ResponseEntity<List<GasStationByAddressResponse>> getAllFavorites(@AuthenticationPrincipal UserDetails user) throws CredentialException {
+        return ResponseEntity.ok(userService.getAllFavoritesByUser((UserDetailsImpl) user));
     }
 }

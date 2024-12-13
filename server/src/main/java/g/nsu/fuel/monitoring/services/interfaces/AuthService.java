@@ -2,9 +2,9 @@ package g.nsu.fuel.monitoring.services.interfaces;
 
 import g.nsu.fuel.monitoring.payload.response.AccountInfoResponse;
 import g.nsu.fuel.monitoring.payload.response.JwtResponse;
+import g.nsu.fuel.monitoring.services.UserDetailsImpl;
 import org.antlr.v4.runtime.misc.Pair;
 import org.springframework.http.ResponseCookie;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.security.auth.login.CredentialException;
 
@@ -38,5 +38,5 @@ public interface AuthService {
      * @param userDetails объект UserDetails из которого будет получен username при правильном JWT.
      * @return объект AccountInfoResponse с основной информацией об аккаунте пользователя.
      */
-    AccountInfoResponse getAccountInfo(UserDetails userDetails);
+    AccountInfoResponse getAccountInfo(UserDetailsImpl userDetails) throws CredentialException;
 }

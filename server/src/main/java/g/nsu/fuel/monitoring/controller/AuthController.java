@@ -3,10 +3,12 @@ package g.nsu.fuel.monitoring.controller;
 import g.nsu.fuel.monitoring.payload.requests.FingerprintRequest;
 import g.nsu.fuel.monitoring.payload.requests.LoginRequest;
 import g.nsu.fuel.monitoring.payload.requests.RegistrationRequest;
+import g.nsu.fuel.monitoring.payload.response.AccountInfoResponse;
 import g.nsu.fuel.monitoring.payload.response.DataResponse;
 import g.nsu.fuel.monitoring.payload.response.ErrorResponse;
 import g.nsu.fuel.monitoring.payload.response.JwtResponse;
 import g.nsu.fuel.monitoring.services.TokensService;
+import g.nsu.fuel.monitoring.services.UserDetailsImpl;
 import g.nsu.fuel.monitoring.services.interfaces.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -21,10 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 import javax.security.auth.login.CredentialException;
 
@@ -122,5 +123,14 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, pair.b.toString())
                 .body(pair.a);
+    }
+
+    @Operation(
+            summary = "Получение информации о профиле пользователя.",
+            description = """
+                    """)
+    @GetMapping("/profile")
+    public ResponseEntity<AccountInfoResponse> getUserProfile(@AuthenticationPrincipal UserDetails user) throws CredentialException {
+        return ResponseEntity.ok(authService.getAccountInfo((UserDetailsImpl) user));
     }
 }

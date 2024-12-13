@@ -5,9 +5,8 @@ import g.nsu.fuel.monitoring.entities.security.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -36,7 +35,7 @@ public class Account {
     private String oilType;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "accountId")
-    private List<Favorites> favorites = new ArrayList<>();
+    private Set<Favorites> favorites = new HashSet<>();
 
     @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "account_roles",
