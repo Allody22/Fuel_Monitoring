@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Header from '../components/Header/Header'; // Импортируем хэдер
+import { useLocation } from 'wouter';
 import AuthService from '../components/AuthService/AuthService';
 
 export const AuthPage: React.FC = () => {
@@ -11,6 +12,7 @@ export const AuthPage: React.FC = () => {
     password: '',
     name: '',
   });
+  const [location, setLocation] = useLocation();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -27,7 +29,7 @@ export const AuthPage: React.FC = () => {
         alert('Успешный вход: ' + JSON.stringify(response));
         const expirationDate = new Date(Date.now() + response.expires_in).toUTCString();
         document.cookie = `access_token=${response.access_token}; expires=${expirationDate}; path=/; Secure; SameSite=Strict`;
-
+        setLocation('/gas-stations'); // Перемещаем пользователя на страницу с АЗС
       } else {
         const response = await AuthService.register(formData.phoneNumber, formData.password, "Unused");
         alert('Успешная регистрация: ' + JSON.stringify(response));

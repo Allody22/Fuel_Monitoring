@@ -10,10 +10,12 @@ import g.nsu.fuel.monitoring.repository.GasStationRepository;
 import g.nsu.fuel.monitoring.repository.jdbc.GasStationAddressJdbcRepository;
 import g.nsu.fuel.monitoring.services.interfaces.GasStationAddressService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class GasStationAddressServiceImpl implements GasStationAddressService {
